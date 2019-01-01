@@ -22,7 +22,9 @@ var cardIcons = {
 }
 
 var initialStateOfDataLayer = {
-  totalMoves: 3,
+  startTime: 0,
+  endTime: 0,
+  totalMoves: 0,
   totalMatch: 0,
   cards: [DIAMOND, DIAMOND, PAPER_PLANE, PAPER_PLANE, ANCHOR, ANCHOR, BOLT, BOLT, CUBE, CUBE, LEAF, LEAF, BICYCLE, BICYCLE, BOMB, BOMB],
   currentChoice: undefined,
@@ -32,45 +34,6 @@ var initialStateOfDataLayer = {
 var dataLayer = {
   ...initialStateOfDataLayer
 };
-
-/*
- * Create a list that holds all of your cards
- */
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-  var currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
 
 var activeCardClassName = "--show";
 var matchCardClassName = "--match";
@@ -86,6 +49,7 @@ function onCardClick(event) {
       return;
     }
     if (_.includes(targetClassName, activeCardClassName)) {
+      // TODO: handle the case to allow ppl to flip:
       // target.className = _.trim(_.replace(targetClassName, cardClassName + activeCardClassName, ""));
       return;
     } else {
@@ -94,39 +58,36 @@ function onCardClick(event) {
       // handle matching here....
       handleMatchingCard(target);
     }
+
+    showTotalMoves();
+    calculateRanking();
   }
 }
 
 function handleMatchingCard(target) {
-
-  // TODO: use lodash:
   var currentChoice = _.toNumber(_.get(dataLayer, 'currentChoice'));
   var currentChoiceVal = currentChoice < _.size(dataLayer.cards) && dataLayer.cards[currentChoice];
 
   var nextChoice = target && _.toNumber(target.getAttribute('data-attr'));
   var nextChoiceVal = nextChoice < _.size(dataLayer.cards) && dataLayer.cards[nextChoice];
 
-  console.log('current choice', currentChoice, currentChoiceVal);
-  console.log('next choice', nextChoice, nextChoiceVal);
-  // console.log('totalselected cards', dataLayer.numberOfSelectedCards);
+  if (!currentChoice || currentChoice !== nextChoice) {
+    if (currentChoice !== 0 && !currentChoice) {
 
-  if(!currentChoice || currentChoice !== nextChoice) {
-    if(!currentChoiceVal) {
       dataLayer.currentChoice = nextChoice;
       dataLayer.numberOfSelectedCards += 1;
-    } else if(nextChoiceVal) {
+    } else {
       dataLayer.numberOfSelectedCards += 1;
-      console.log('here...', dataLayer.numberOfSelectedCards);
-      if(dataLayer.numberOfSelectedCards >= 2) {
+
+      if (dataLayer.numberOfSelectedCards >= 2) {
+        dataLayer.totalMoves += 1;
         // if match
-        if(currentChoiceVal === nextChoiceVal) {
+        if (currentChoiceVal === nextChoiceVal) {
           dataLayer.totalMatch += 1;
           document.getElementById("success-sound").play();
           bindMatchClases(currentChoice, nextChoice);
         } else {
-          document.getElementById("failure-sound").play();
-          dataLayer.totalMoves -= 1;
-          // hideCards();
+          setTimeout(handleFailure, 500);
         }
         dataLayer.currentChoice = undefined;
         dataLayer.numberOfSelectedCards = 0;
@@ -136,13 +97,96 @@ function handleMatchingCard(target) {
     }
   }
 
-  if(dataLayer.totalMoves <= 0) {
-    document.getElementById("lost-sound").play();
-    onRestart();
+  if(dataLayer.totalMatch === _.size(dataLayer.cards) / 2) {
+    setTimeout(toggleSuccess, 800);
+  }
+}
+
+function handleFailure() {
+  document.getElementById("failure-sound").play();
+  hideCards();
+}
+
+var successModalClassName = 'successModal';
+function toggleSuccess(hide) {
+  var target = document.querySelector('.' + successModalClassName);
+  var targetClassName = _.get(target, 'className');
+  if(hide) {
+    target.className = _.trim(_.replace(targetClassName, 'show', ''));
+    return;
+  }
+  // end time:
+  dataLayer.endTime = Date.now();
+
+  //play success sound
+  document.getElementById('win-sound').play();
+
+  //show success modal:
+  var messageParagraph = document.querySelector('.' + 'successModal__message-paragraph');
+  var totalTime = (dataLayer.endTime - dataLayer.startTime);
+  totalTime = totalTime > 0 ? moment(totalTime).format('mm:ss') : 0;
+  messageParagraph.innerText = 'You won the game ' + ' in ' + (totalTime) + ' minutes!';
+  //minutes:
+  if(!_.includes(target.className, 'show')) {
+    target.className = targetClassName + " show";
+  } else {
+    target.className = _.trim(_.replace(targetClassName, 'show', ''));
   }
 
-  console.log('totalMoves', dataLayer.totalMoves);
-  console.log('numberofselected cards', dataLayer.numberOfSelectedCards);
+  calculateRanking(true);
+}
+
+var EXCELLENT_UPPER_BOUND = 10;
+var GOOD_UPPER_BOUND = 20;
+function calculateRanking(isModal) {
+  var target;
+
+  if(isModal){
+    target = document.querySelector('.successModal__rank');
+    if(target) {
+      target.parentElement.removeChild(target);
+    }
+
+    target = document.createElement('div');
+    target.className = 'successModal__rank';
+  } else {
+    target = document.querySelector('.score-panel__stars');
+    if(target) {
+      target.parentElement.removeChild(target);
+    }
+
+    target = document.createElement('div');
+    target.className= 'score-panel__stars col-4';
+  }
+
+  var totalStars = 0;
+  if(dataLayer.totalMoves <= EXCELLENT_UPPER_BOUND) {
+    totalStars = 3;
+  } else if (dataLayer.totalMoves <= GOOD_UPPER_BOUND) {
+    totalStars = 2;
+  } else {
+    totalStars = 1;
+  }
+
+  var stars = _.range(totalStars);
+  var fragment = document.createDocumentFragment();
+
+  _.forEach(stars, function(star){
+    var newElement = document.createElement('span');
+    newElement.className = isModal ? 'successModal__icon fa fa-star' : 'score-panel__star-icon fa fa-star';
+    fragment.appendChild(newElement);
+  })
+
+  target.appendChild(fragment);
+
+  if(isModal) {
+    var insertPlace = document.querySelector('.modal-body');
+    var beforeNode = document.querySelector('.successModal__message-paragraph');
+    insertPlace.insertBefore(target, insertPlace.firstChild);
+  } else {
+    var insertPlace = document.querySelector('.score-panel');
+    insertPlace.insertBefore(target, insertPlace.firstChild);
+  }
 }
 
 function bindMatchClases(currentChoice, nextChoice) {
@@ -154,36 +198,35 @@ function bindMatchClases(currentChoice, nextChoice) {
 
 function hideCards() {
   var openingCards = document.querySelectorAll("." + cardClassName + activeCardClassName);
-  _.forEach(openingCards, function(card) {
-    card.className =_.trim(_.replace(card.className, cardClassName + activeCardClassName, ""));
+  _.forEach(openingCards, function (card) {
+    card.className = _.trim(_.replace(card.className, cardClassName + activeCardClassName, ""));
   })
 }
 
 function bindAllCardsClick() {
   var cards = document.querySelectorAll("." + cardClassName);
-  _.forEach(cards, function(card) {
+  _.forEach(cards, function (card) {
     card.addEventListener("click", onCardClick);
   });
 }
 
 function initCardsOptions() {
   var deckSection = document.querySelector('.deck');
-  if(!deckSection) {
-    deckSection = document.createElement('section');
-    deckSection.className = 'deck row';
-  } else {
-    deckSection.innerHTML = '';
+  if (deckSection) {
+    deckSection.parentElement.removeChild(deckSection);
   }
+  deckSection = document.createElement('section');
+  deckSection.className = 'deck row';
 
   // first shuffle data:
   var cards = shuffle(dataLayer.cards);
   // then render...
-  _.forEach(cards, function(card, index){
+  _.forEach(cards, function (card, index) {
     var newELement = document.createElement('div');
     newELement.className = "deck__card-wrapper col-6 col-md-3";
 
     var iconClassName = _.get(cardIcons, '' + card);
-    if(iconClassName) {
+    if (iconClassName) {
       newELement.innerHTML = `
         <div class="deck__card" data-attr="${index}">
           <i class="deck__card-icon ${iconClassName}"></i>
@@ -198,27 +241,55 @@ function initCardsOptions() {
   bindAllCardsClick();
 }
 
-var restartButtonClassName ="score-panel__restart-button"
+function showTotalMoves() {
+  var totalMovesElem = document.querySelector('.score-panel__total-moves');
+
+  if(totalMovesElem) {
+    totalMovesElem.innerText = 'Total moves: ' + dataLayer.totalMoves;
+  }
+}
+
+var restartButtonClassName = "restart-button"
+
 function onRestart() {
   // shuffle options:
   var cards = shuffle(dataLayer.cards);
 
   // reset to initial state of data layer:
-  dataLayer = initialStateOfDataLayer;
+  dataLayer = { ...initialStateOfDataLayer
+  };
   dataLayer.cards = cards;
 
+  // hide modals:
+  toggleSuccess(true);
+
   //render cards again:
-  initCardsOptions();
+  init();
 }
 
-
 function bindRestartClick() {
-  document.querySelector('.' + restartButtonClassName).addEventListener('click', onRestart);
+  var restartButtons = document.querySelectorAll('.' + restartButtonClassName);
+  _.forEach(restartButtons, function(restartButton){
+    restartButton.addEventListener('click', onRestart);
+  });
+}
+
+function initTime() {
+  dataLayer.startTime = Date.now();
+}
+
+function bindCloseModalClick() {
+  document.querySelector('.successModal__dialog-close').addEventListener('click', function(){
+    toggleSuccess(true);
+  })
 }
 
 function init() {
+  initTime();
   initCardsOptions();
   bindRestartClick();
+  bindCloseModalClick();
+  showTotalMoves();
 }
 
 // Execution:

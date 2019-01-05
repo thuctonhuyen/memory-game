@@ -18,7 +18,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps="
     crossorigin="anonymous"></script>
   <script src="js/moment.min.js"></script>
+  <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/cardHandlers.js"></script>
 </head>
 
 <body>
@@ -28,17 +30,20 @@
     </header>
 
     <section class="score-panel row">
-      <div class="score-panel__stars col-4">
+      <div class="score-panel__stars col-3">
         <span class="score-panel__star-icon fa fa-star"></span>
         <span class="score-panel__star-icon fa fa-star"></span>
         <span class="score-panel__star-icon fa fa-star"></span>
       </div>
-      <div class="score-panel__total-moves-wrapper col-4">
+      <div class="score-panel__total-moves-wrapper col-3">
         <span class="score-panel__total-moves">DUMMY NUMBER HERE....</span>
       </div>
+      <div class="score-panel__total-time-wrapper col-3">
 
-      <div class="score-panel__restart-button restart-button col-4">
-        Restart? <i class="score-panel__restart-button-icon fa fa-repeat"></i>
+      </div>
+      <div class="score-panel__restart-button restart-button col-3">
+        Restart?
+        <i class="score-panel__restart-button-icon fa fa-repeat"></i>
       </div>
     </section>
   </div>
@@ -58,13 +63,15 @@
           </div>
           <div class="successModal__message">
             <div class="successModal__message-picture">
-              <img src="img/congratz.gif" >
+              <img src="img/congratz.gif">
             </div>
             <p class="successModal__message-paragraph"></p>
           </div>
           <div class="successModal__action">
-            <span>Play again? </span>
-            <span class="restart-button  fa fa-repeat"></span>
+            <div class="successModal__restart-button restart-button">
+              <span>Play again? </span>
+              <span class="successModal__restart-button-icon fa fa-repeat"></span>
+            </div>
           </div>
         </div>
       </div>

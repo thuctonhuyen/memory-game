@@ -1,13 +1,9 @@
-var activeCardClassName = "--show";
-var matchCardClassName = "--match";
-var cardClassName = "deck__card";
-
 function onCardClick(event) {
-  document.getElementById("click-sound").play();
-  var target = _.get(event, "target");
+  document.getElementById(clickAudioId).play();
+  let target = _.get(event, "target");
 
   if (target) {
-    var targetClassName = _.get(target, "className");
+    const targetClassName = _.get(target, "className");
     if (_.includes(targetClassName, matchCardClassName)) {
       return;
     }
@@ -28,11 +24,11 @@ function onCardClick(event) {
 }
 
 function handleMatchingCard(target) {
-  var currentChoice = _.toNumber(_.get(dataLayer, 'currentChoice'));
-  var currentChoiceVal = currentChoice < _.size(dataLayer.cards) && dataLayer.cards[currentChoice];
+  const currentChoice = _.toNumber(_.get(dataLayer, 'currentChoice'));
+  const currentChoiceVal = currentChoice < _.size(dataLayer.cards) && dataLayer.cards[currentChoice];
 
-  var nextChoice = target && _.toNumber(target.getAttribute('data-attr'));
-  var nextChoiceVal = nextChoice < _.size(dataLayer.cards) && dataLayer.cards[nextChoice];
+  const nextChoice = target && _.toNumber(target.getAttribute('data-attr'));
+  const nextChoiceVal = nextChoice < _.size(dataLayer.cards) && dataLayer.cards[nextChoice];
 
   if (!currentChoice || currentChoice !== nextChoice) {
     if (currentChoice !== 0 && !currentChoice) {
@@ -47,7 +43,7 @@ function handleMatchingCard(target) {
         // if match
         if (currentChoiceVal === nextChoiceVal) {
           dataLayer.totalMatch += 1;
-          document.getElementById("success-sound").play();
+          document.getElementById(successAudioId).play();
           bindMatchClases(currentChoice, nextChoice);
         } else {
           setTimeout(handleFailure, 500);
@@ -66,6 +62,6 @@ function handleMatchingCard(target) {
 }
 
 function handleFailure() {
-  document.getElementById("failure-sound").play();
+  document.getElementById(failureAudioId).play();
   hideCards();
 }

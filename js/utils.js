@@ -19,7 +19,7 @@ function toggleSuccess(hide) {
   var target = document.querySelector('.' + successModalClassName);
   var targetClassName = _.get(target, 'className');
   if(hide) {
-    target.className = _.trim(_.replace(targetClassName, 'show', ''));
+    target.className = _.trim(_.replace(targetClassName, showClassName, ''));
     return;
   }
   // end time:
@@ -29,15 +29,15 @@ function toggleSuccess(hide) {
   document.getElementById('win-sound').play();
 
   //show success modal:
-  var messageParagraph = document.querySelector('.' + 'successModal__message-paragraph');
+  var messageParagraph = document.querySelector('.' + susccesModalMessageParagraph);
   var totalTime = (dataLayer.endTime - dataLayer.startTime);
-  totalTime = totalTime > 0 ? moment(totalTime).format('mm:ss') : 0;
-  messageParagraph.innerText = 'You won the game ' + ' in ' + (totalTime) + ' minutes!';
+  totalTime = totalTime > 0 ? moment(totalTime).format(totalTimeFormat) : 0;
+  messageParagraph.innerText = _.replace(messageParagraphText, replaceText, totalTime);
   //minutes:
-  if(!_.includes(target.className, 'show')) {
-    target.className = targetClassName + " show";
+  if(!_.includes(target.className, showClassName)) {
+    target.className = targetClassName + " " + showClassName;
   } else {
-    target.className = _.trim(_.replace(targetClassName, 'show', ''));
+    target.className = _.trim(_.replace(targetClassName, showClassName, ''));
   }
 
   calculateRanking(true);
@@ -47,21 +47,21 @@ function calculateRanking(isModal) {
   var target;
 
   if(isModal){
-    target = document.querySelector('.successModal__rank');
+    target = document.querySelector('.' + successModalRankClassName);
     if(target) {
       target.parentElement.removeChild(target);
     }
 
-    target = document.createElement('div');
-    target.className = 'successModal__rank';
+    target = document.createElement(scorePanelStarsElemType);
+    target.className = successModalRankClassName;
   } else {
-    target = document.querySelector('.score-panel__stars');
+    target = document.querySelector('.' + scorePanelStarsClassName);
     if(target) {
       target.parentElement.removeChild(target);
     }
 
     target = document.createElement('div');
-    target.className= 'score-panel__stars col-3';
+    target.className= scorePanelStarsClassName + " " + scorePanelStarsColumnClassName;
   }
 
   var totalStars = 0;
@@ -77,19 +77,19 @@ function calculateRanking(isModal) {
   var fragment = document.createDocumentFragment();
 
   _.forEach(stars, function(star){
-    var newElement = document.createElement('span');
-    newElement.className = isModal ? 'successModal__icon fa fa-star' : 'score-panel__star-icon fa fa-star';
+    var newElement = document.createElement(successModalIconElemType);
+    newElement.className = isModal ? successModalIconClassName : scorePanelStarIconClassName;
     fragment.appendChild(newElement);
   })
 
   target.appendChild(fragment);
 
   if(isModal) {
-    var insertPlace = document.querySelector('.modal-body');
-    var beforeNode = document.querySelector('.successModal__message-paragraph');
+    var insertPlace = document.querySelector('.' + modalBodyClassName);
+    var beforeNode = document.querySelector('.' + susccesModalMessageParagraph);
     insertPlace.insertBefore(target, insertPlace.firstChild);
   } else {
-    var insertPlace = document.querySelector('.score-panel');
+    var insertPlace = document.querySelector('.' + scorePanelClassName);
     insertPlace.insertBefore(target, insertPlace.firstChild);
   }
 }
@@ -109,10 +109,10 @@ function hideCards() {
 }
 
 function showTotalMoves() {
-  let totalMovesElem = document.querySelector('.score-panel__total-moves');
+  let totalMovesElem = document.querySelector('.' + scorePanelTotalMovesClassName);
 
   if(totalMovesElem) {
-    totalMovesElem.innerText = 'Total moves: ' + dataLayer.totalMoves;
+    totalMovesElem.innerText = _.replace(totalMovesText, replaceText, dataLayer.totalMoves)
   }
 }
 
@@ -120,7 +120,7 @@ function displayTime() {
   const endTime = dataLayer.endTime;
   const startTime = dataLayer.startTime;
   let totalTime = !endTime ? (Date.now() - startTime) : endTime - startTime;
-  totalTime = moment(totalTime).format('mm:ss');
-  document.querySelector('.' + totalTimeClassName).innerText = 'Total Time: ' + totalTime;
+  totalTime = moment(totalTime).format(totalTimeFormat);
+  document.querySelector('.' + totalTimeClassName).innerText = _.replace(totalTimeText, replaceText, totalTime);
   setTimeout(function(){ displayTime() }, 500);
 }

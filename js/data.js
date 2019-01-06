@@ -1,16 +1,16 @@
 /*
     Data Layer
 */
-var DIAMOND = 0;
-var PAPER_PLANE = 1;
-var ANCHOR = 2;
-var BOLT = 3;
-var CUBE = 4;
-var LEAF = 5;
-var BICYCLE = 6;
-var BOMB = 7;
+const DIAMOND = 0;
+const PAPER_PLANE = 1;
+const ANCHOR = 2;
+const BOLT = 3;
+const CUBE = 4;
+const LEAF = 5;
+const BICYCLE = 6;
+const BOMB = 7;
 
-var cardIcons = {
+const cardIcons = {
   [DIAMOND]: 'fa fa-diamond',
   [PAPER_PLANE]: 'fa fa-paper-plane-o',
   [ANCHOR]: 'fa fa-anchor',
@@ -21,7 +21,7 @@ var cardIcons = {
   [BOMB]: 'fa fa-bomb'
 }
 
-var initialStateOfDataLayer = {
+const initialStateOfDataLayer = {
   startTime: 0,
   endTime: 0,
   totalMoves: 0,
@@ -48,16 +48,39 @@ var initialStateOfDataLayer = {
   numberOfSelectedCards: 0
 }
 
-var dataLayer = {
+let dataLayer = {
   ...initialStateOfDataLayer
 };
 
-var activeCardClassName = "--show";
-var matchCardClassName = "--match";
-var cardClassName = "deck__card";
-var successModalClassName = 'successModal';
-var restartButtonClassName = "restart-button";
-var totalTimeClassName = "score-panel__total-time-wrapper";
+const activeCardClassName = "--show";
+const matchCardClassName = "--match";
+const cardClassName = "deck__card";
+const successModalClassName = 'successModal';
+const restartButtonClassName = "restart-button";
+const totalTimeClassName = "score-panel__total-time-wrapper";
+const showClassName = "show";
+const susccesModalMessageParagraph = "successModal__message-paragraph";
+const successModalRankClassName = "successModal__rank";
+const scorePanelStarsClassName = "score-panel__stars";
+const scorePanelStarsColumnClassName = "col-3";
+const successModalIconClassName = "successModal__icon fa fa-star";
+const scorePanelStarIconClassName = "score-panel__star-icon fa fa-star";
+const modalBodyClassName = "modal-body";
+const scorePanelClassName = "score-panel";
+const scorePanelTotalMovesClassName = "score-panel__total-moves";
 
-var EXCELLENT_UPPER_BOUND = 10;
-var GOOD_UPPER_BOUND = 20;
+const EXCELLENT_UPPER_BOUND = 10;
+const GOOD_UPPER_BOUND = 20;
+
+const clickAudioId = "click-sound";
+const successAudioId = "success-sound";
+const failureAudioId = "failure-sound";
+
+const replaceText = "[...]";
+const messageParagraphText = "You won the game in [...] minutes!";
+const totalMovesText = "Total Moves: [...]";
+const totalTimeText = "Total Time: [...]";
+
+const totalTimeFormat = "mm:ss";
+const scorePanelStarsElemType = "div";
+const successModalIconElemType = "span";

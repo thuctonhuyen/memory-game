@@ -2,19 +2,19 @@
 
 ## Table of Contents
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Memory Game] (#Memory Game)
+* [How to get this game](#How to get this game?)
+* [Instruction] (#Instruction)
 
-## Instructions
+## Memory Game
+Memory game is a game where users win by memorizing the content behind the card and try to match with one another. Users win once all the cards are matched. Based on the total moves they made, users would have different rank which is represented in number of stars (the highest is 3 and the lowest is 1).
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## How to get this game
+To play this game, you can clone this project or download as a zipped folder. Then, you open the index.html and start playing the game by opening the cards to reveal its content and try to match them all together. The fewer moves you make, the higher rank you get.
 
-To get started, open `js/app.js` and start building out the app's functionality
+## Instruction
+* Click on any card of your choice and memorize its content
+* Click on more cards of your choice and try to match with previously opened card
+* Once all the cards are matched, you win! A modal will show up to congratulate you
+* In order to restart the game, click on the restart button on the top right corder
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).

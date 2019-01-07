@@ -1,5 +1,7 @@
 function onCardClick(event) {
-  document.getElementById(clickAudioId).play();
+  document
+    .getElementById(clickAudioId)
+    .play();
   let target = _.get(event, "target");
 
   if (target) {
@@ -8,8 +10,6 @@ function onCardClick(event) {
       return;
     }
     if (_.includes(targetClassName, activeCardClassName)) {
-      // TODO: handle the case to allow ppl to flip:
-      // target.className = _.trim(_.replace(targetClassName, cardClassName + activeCardClassName, ""));
       return;
     } else {
       target.className = targetClassName + " " + cardClassName + activeCardClassName;
@@ -30,23 +30,25 @@ function handleMatchingCard(target) {
   const nextChoice = target && _.toNumber(target.getAttribute('data-attr'));
   const nextChoiceVal = nextChoice < _.size(dataLayer.cards) && dataLayer.cards[nextChoice];
 
+  // if the currentChoice does not exist or the currentChoice is not the same at the same position at the next Choice:
   if (!currentChoice || currentChoice !== nextChoice) {
+    // if current choice is falsy (0 in this case is truthy)
     if (currentChoice !== 0 && !currentChoice) {
-
       dataLayer.currentChoice = nextChoice;
       dataLayer.numberOfSelectedCards += 1;
     } else {
       dataLayer.numberOfSelectedCards += 1;
-
       if (dataLayer.numberOfSelectedCards >= 2) {
         dataLayer.totalMoves += 1;
         // if match
         if (currentChoiceVal === nextChoiceVal) {
           dataLayer.totalMatch += 1;
-          document.getElementById(successAudioId).play();
+          document
+            .getElementById(successAudioId)
+            .play();
           bindMatchClases(currentChoice, nextChoice);
         } else {
-          setTimeout(handleFailure, 500);
+          setTimeout(handleFailure, handleFailureTimeOut);
         }
         dataLayer.currentChoice = undefined;
         dataLayer.numberOfSelectedCards = 0;
@@ -56,12 +58,15 @@ function handleMatchingCard(target) {
     }
   }
 
-  if(dataLayer.totalMatch === _.size(dataLayer.cards) / 2) {
-    setTimeout(toggleSuccess, 800);
+  // if totalMatch equals to the total pairs of cards then success!
+  if (dataLayer.totalMatch === _.size(dataLayer.cards) / 2) {
+    setTimeout(toggleSuccess, handleSuccessTimeOut);
   }
 }
 
 function handleFailure() {
-  document.getElementById(failureAudioId).play();
+  document
+    .getElementById(failureAudioId)
+    .play();
   hideCards();
 }

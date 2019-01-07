@@ -83,4 +83,7 @@ const totalTimeText = "Total Time: [...]";
 
 const totalTimeFormat = "mm:ss";
 const scorePanelStarsElemType = "div";
+const successModalRankElemType = "div";
 const successModalIconElemType = "span";
+const handleFailureTimeOut = 500;
+const handleSuccessTimeOut = 800;

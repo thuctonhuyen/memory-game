@@ -69,8 +69,14 @@ header {
   justify-content: center;
   align-items: center;
   box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-  /* // TODO: add vendor specific */
+  -webkit-transition: transform ease 0.5s;
+  -moz-transition: transform ease 0.5s;
+  -o-transition: transform ease 0.5s;
   transition: transform ease 0.5s;
+  -webkit-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
   transform: rotateY(180deg);
   font-size: 0;
 }
@@ -106,8 +112,13 @@ score-panel__restart-button-icon {
 
 .successModal.show {
   display: block;
-  /* TODO: add vendor */
+  -webkit-animation-name: bounceIn;
+  -moz-animation-name: bounceIn;
+  -o-animation-name: bounceIn;
   animation-name: bounceIn;
+  -webkit-animation-duration: 0.75s;
+  -moz-animation-duration: 0.75s;
+  -o-animation-duration: 0.75s;
   animation-duration: 0.75s;
 }
 

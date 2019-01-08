@@ -85,5 +85,5 @@ const totalTimeFormat = "mm:ss";
 const scorePanelStarsElemType = "div";
 const successModalRankElemType = "div";
 const successModalIconElemType = "span";
-const handleFailureTimeOut = 500;
+const handleFailureTimeOut = 800;
 const handleSuccessTimeOut = 800;

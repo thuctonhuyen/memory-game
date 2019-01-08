@@ -34,7 +34,7 @@ function toggleSuccess(hide) {
   var messageParagraph = document.querySelector('.' + susccesModalMessageParagraph);
   var totalTime = (dataLayer.endTime - dataLayer.startTime);
   totalTime = totalTime > 0
-    ? moment(totalTime).format(totalTimeFormat)
+    ? moment.utc(totalTime).format(totalTimeFormat)
     : 0;
   messageParagraph.innerText = _.replace(messageParagraphText, replaceText, totalTime);
   //minutes:
@@ -131,7 +131,7 @@ function displayTime() {
   let totalTime = !endTime
     ? (Date.now() - startTime)
     : endTime - startTime;
-  totalTime = moment(totalTime).format(totalTimeFormat);
+  totalTime = moment.utc(totalTime).format(totalTimeFormat);
   document
     .querySelector('.' + totalTimeClassName)
     .innerText = _.replace(totalTimeText, replaceText, totalTime);

@@ -41,8 +41,7 @@ function onRestart() {
   var cards = shuffle(dataLayer.cards);
 
   // reset to initial state of data layer:
-  dataLayer = { ...initialStateOfDataLayer
-  };
+  dataLayer = Object.assign({}, initialStateOfDataLayer);
   dataLayer.cards = cards;
 
   // hide modals:

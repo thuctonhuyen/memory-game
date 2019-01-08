@@ -48,9 +48,7 @@ const initialStateOfDataLayer = {
   numberOfSelectedCards: 0
 }
 
-let dataLayer = {
-  ...initialStateOfDataLayer
-};
+let dataLayer = Object.assign({}, initialStateOfDataLayer);
 
 const activeCardClassName = "--show";
 const matchCardClassName = "--match";
@@ -85,5 +83,5 @@ const totalTimeFormat = "mm:ss";
 const scorePanelStarsElemType = "div";
 const successModalRankElemType = "div";
 const successModalIconElemType = "span";
-const handleFailureTimeOut = 800;
+const handleFailureTimeOut = 500;
 const handleSuccessTimeOut = 800;

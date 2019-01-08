@@ -23,7 +23,7 @@ function toggleSuccess(hide) {
     return;
   }
   // end time:
-  dataLayer.endTime = Date.now();
+  dataLayer.endTime = moment();
 
   //play success sound
   document
@@ -129,7 +129,7 @@ function displayTime() {
   const endTime = dataLayer.endTime;
   const startTime = dataLayer.startTime;
   let totalTime = !endTime
-    ? (Date.now() - startTime)
+    ? (moment() - startTime)
     : endTime - startTime;
   totalTime = moment.utc(totalTime).format(totalTimeFormat);
   document

@@ -59,7 +59,7 @@ function bindRestartClick() {
 }
 
 function initTime() {
-  dataLayer.startTime = Date.now();
+  dataLayer.startTime = moment();
 }
 
 function bindCloseModalClick() {
